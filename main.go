@@ -18,6 +18,7 @@ func main() {
 			{
 				Name:      "install",
 				Usage:     "install packages",
+				Aliases:   []string{"add"},
 				ArgsUsage: "package name",
 				Action: func(c *cli.Context) error {
 					config, err := loadConfig()
@@ -34,6 +35,35 @@ func main() {
 							continue
 						}
 						args := append(strings.Split((*pm.Install), " "), c.Args().Get(0))
+						cmd := exec.Command(pm.Name, args...)
+						cmd.Stdout = os.Stdout
+						cmd.Stderr = os.Stderr
+						if err := cmd.Run(); err != nil {
+							return fmt.Errorf("failed to run command: %w", err)
+						}
+					}
+					return nil
+				},
+			},
+			{
+				Name:    "uninstall",
+				Usage:   "uninstall packages",
+				Aliases: []string{"remove", "rm"},
+				Action: func(c *cli.Context) error {
+					config, err := loadConfig()
+					if err != nil {
+						return fmt.Errorf("failed to load config: %w", err)
+					}
+					for _, pmname := range config.Level {
+						pm, err := loadPM(pmname)
+						if err != nil {
+							return fmt.Errorf("failed to load PM: %w", err)
+						}
+						if pm.Uninstall == nil {
+							fmt.Printf("Uninstalling %s...\n", pm.Uninstall)
+							continue
+						}
+						args := append(strings.Split((*pm.Uninstall), " "), c.Args().Get(0))
 						cmd := exec.Command(pm.Name, args...)
 						cmd.Stdout = os.Stdout
 						cmd.Stderr = os.Stderr

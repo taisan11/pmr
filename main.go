@@ -46,6 +46,40 @@ func main() {
 				},
 			},
 			{
+				Name:      "install",
+				Usage:     "install packages",
+				ArgsUsage: "package name",
+				Action: func(c *cli.Context) error {
+					config, err := loadConfig()
+					if err != nil {
+						return fmt.Errorf("failed to load config: %w", err)
+					}
+					for _, pmname := range config.Level {
+						file, err := os.Open(fmt.Sprintf("./pms/%s.json", pmname))
+						if err != nil {
+							return fmt.Errorf("failed to open file: %w", err)
+						}
+						defer file.Close()
+						var pm PM
+						if err := json.NewDecoder(file).Decode(&pm); err != nil {
+							return fmt.Errorf("failed to decode JSON: %w", err)
+						}
+						if pm.Install == nil {
+							fmt.Printf("Installing %s...\n", pm.Install)
+							continue
+						}
+						args := append(strings.Split((*pm.Install), " "), c.Args().Get(0))
+						cmd := exec.Command(pm.Name, args...)
+						cmd.Stdout = os.Stdout
+						cmd.Stderr = os.Stderr
+						if err := cmd.Run(); err != nil {
+							return fmt.Errorf("failed to run command: %w", err)
+						}
+					}
+					return nil
+				},
+			},
+			{
 				Name:  "update",
 				Usage: "update packages",
 				Flags: []cli.Flag{

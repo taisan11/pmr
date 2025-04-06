@@ -8,6 +8,7 @@ type PM struct {
 	Update    *string `json:"Update"`
 	UpdateAll *string `json:"UpdateAll"`
 	Run       *string `json:"Run"`
+	Admin     bool    `json:"Admin"`
 }
 
 type Config struct {

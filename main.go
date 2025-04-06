@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -16,35 +15,6 @@ func main() {
 		Name:  "boom",
 		Usage: "make an explosive entrance",
 		Commands: []*cli.Command{
-			{
-				Name:  "hello",
-				Usage: "say hello",
-				Action: func(c *cli.Context) error {
-					fmt.Println("Hello, World!")
-					return nil
-				},
-			},
-			{
-				Name:      "readjson",
-				Usage:     "read json file",
-				ArgsUsage: "path to the JSON file",
-				Action: func(c *cli.Context) error {
-					// Read the JSON file and parse it into a struct
-					file, err := os.Open(c.Args().Get(0))
-					if err != nil {
-						return fmt.Errorf("failed to open file: %w", err)
-					}
-					defer file.Close()
-
-					var pm PM
-					if err := json.NewDecoder(file).Decode(&pm); err != nil {
-						return fmt.Errorf("failed to decode JSON: %w", err)
-					}
-
-					fmt.Printf("PM: %+v\n", pm)
-					return nil
-				},
-			},
 			{
 				Name:      "install",
 				Usage:     "install packages",

@@ -1,0 +1,6 @@
+{
+    "Name": "mise",
+    "Install": "use -g",
+    "UpdateAll":"self-update",
+    "Admin": false
+}

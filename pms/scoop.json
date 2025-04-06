@@ -1,0 +1,7 @@
+{
+    "Name": "scoop",
+    "Install": "install",
+    "Uninstall": "uninstall",
+    "Update": "update",
+    "UpdateAll":"update -a"
+}

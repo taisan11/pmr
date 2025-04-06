@@ -47,3 +47,20 @@ func createDefaultConfig(config Config) (*Config, error) {
 
 	return &config, nil
 }
+
+func loadPM(PMname string) (*PM, error) {
+	// Try to open existing PM file
+	file, err := os.Open(PMname + ".json")
+	if err != nil {
+		return nil, fmt.Errorf("failed to open file: %w", err)
+	}
+	defer file.Close()
+
+	// Decode existing PM
+	var pm PM
+	if err := json.NewDecoder(file).Decode(&pm); err != nil {
+		return nil, fmt.Errorf("failed to decode JSON: %w", err)
+	}
+
+	return &pm, nil
+}

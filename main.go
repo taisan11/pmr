@@ -55,14 +55,9 @@ func main() {
 						return fmt.Errorf("failed to load config: %w", err)
 					}
 					for _, pmname := range config.Level {
-						file, err := os.Open(fmt.Sprintf("./pms/%s.json", pmname))
+						pm, err := loadPM(pmname)
 						if err != nil {
-							return fmt.Errorf("failed to open file: %w", err)
-						}
-						defer file.Close()
-						var pm PM
-						if err := json.NewDecoder(file).Decode(&pm); err != nil {
-							return fmt.Errorf("failed to decode JSON: %w", err)
+							return fmt.Errorf("failed to load PM: %w", err)
 						}
 						if pm.Install == nil {
 							fmt.Printf("Installing %s...\n", pm.Install)
@@ -96,14 +91,9 @@ func main() {
 					}
 					fmt.Printf("Config: %+v\n", config)
 					for _, pmname := range config.Level {
-						file, err := os.Open(fmt.Sprintf("./pms/%s.json", pmname))
+						pm, err := loadPM(pmname)
 						if err != nil {
-							return fmt.Errorf("failed to open file: %w", err)
-						}
-						defer file.Close()
-						var pm PM
-						if err := json.NewDecoder(file).Decode(&pm); err != nil {
-							return fmt.Errorf("failed to decode JSON: %w", err)
+							return fmt.Errorf("failed to load PM: %w", err)
 						}
 						if c.Bool("all") {
 							if pm.UpdateAll == nil {
